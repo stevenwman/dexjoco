@@ -12,12 +12,6 @@ Before running simulation tasks:
 python scripts/download_assets.py --bundle sim-xmls
 ```
 
-Before using GeoRT-based teleoperation:
-
-```bash
-python scripts/download_assets.py --bundle geort-runtime-assets
-```
-
 If you omit `--bundle`, the downloader fetches every bundle listed in the manifest.
 
 ## Default Release Location
@@ -41,9 +35,6 @@ python scripts/download_assets.py --base-url https://github.com/brave-eai/dexjoc
 
 - `sim-xmls`:
   The full `dexjoco_sim/envs/xmls` tree, including XML files, meshes, and textures.
-- `geort-runtime-assets`:
-  Dexjoco's default GeoRT retarget checkpoints for Rokoko deployment.
-
 ## Maintainer Notes
 
 The release asset archives are prepared outside the Git repository. In the current local layout they were generated into:

@@ -14,7 +14,8 @@ dexjoco_sim/envs/xmls/**
 teleoperation/GeoRT/checkpoint/**/*.pth
 !teleoperation/GeoRT/checkpoint/fk_model_allegro_left.pth
 !teleoperation/GeoRT/checkpoint/fk_model_allegro_right.pth
+!teleoperation/GeoRT/checkpoint/allegro_left_2026-01-27_16-55-53_dexjoco_left_default/last.pth
+!teleoperation/GeoRT/checkpoint/allegro_right_2025-12-16_13-22-14_dexjoco_right_default/last.pth
 teleoperation/GeoRT/data/*
 !teleoperation/GeoRT/data/
 !teleoperation/GeoRT/data/README.md
-teleoperation/GeoRT/hand_landmarker.task

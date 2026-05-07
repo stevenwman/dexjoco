@@ -31,16 +31,10 @@ The simulator itself only depends on the UDP packets described in
 
 ## Quick Start
 
-Dexjoco keeps large runtime assets out of Git. Before running simulation tasks, restore the simulation XML and asset bundle:
+Dexjoco keeps the large simulation XML asset tree out of Git. Before running simulation tasks, restore the simulation XML bundle:
 
 ```bash
 python scripts/download_assets.py --bundle sim-xmls
-```
-
-If you plan to use GeoRT-based teleoperation, also restore the GeoRT runtime assets:
-
-```bash
-python scripts/download_assets.py --bundle geort-runtime-assets
 ```
 
 Additional details live in [`docs/assets.md`](docs/assets.md).

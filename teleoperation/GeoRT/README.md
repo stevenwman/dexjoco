@@ -12,11 +12,7 @@ pip install trimesh open3d sapien zmq
 pip install -e .
 ```
 
-Default retarget checkpoints are distributed separately from Git. From the Dexjoco repository root, restore the pieces you need with:
-
-```
-python scripts/download_assets.py --bundle geort-runtime-assets
-```
+Dexjoco's default GeoRT retarget checkpoints are tracked directly in this repository under `teleoperation/GeoRT/checkpoint/`.
 
 Otherwise, we recommend using a virtual environment to install the required packages. To install the required packages, run the following command:
 ```
