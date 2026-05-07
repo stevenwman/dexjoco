@@ -1,6 +1,6 @@
 ## dexjoco
 
-Dexjoco is a MuJoCo-based simulation benchmark for dexterous hands and robotic arms. The default public research setup is simulation-only and does not require RealSense, SpaceMouse, OpenVR, Franka robot servers, JAX, or TensorFlow.
+Dexjoco is a MuJoCo-based simulation benchmark for dexterous hands
 
 ## Installation
 
@@ -30,14 +30,6 @@ The simulator itself only depends on the UDP packets described in
 [`docs/teleop_udp_protocol.md`](docs/teleop_udp_protocol.md).
 
 ## Quick Start
-
-Dexjoco keeps the large simulation XML asset tree out of Git. Before running simulation tasks, restore the simulation XML bundle:
-
-```bash
-python scripts/download_assets.py --bundle sim-xmls
-```
-
-Additional details live in [`docs/assets.md`](docs/assets.md).
 
 ```bash
 python scripts/record_demos_zarr.py \

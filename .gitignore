@@ -7,10 +7,6 @@ __pycache__/
 /checkpoints
 /datasets
 
-dexjoco_sim/envs/xmls/**
-!dexjoco_sim/envs/xmls/
-!dexjoco_sim/envs/xmls/README.md
-
 teleoperation/GeoRT/checkpoint/**/*.pth
 !teleoperation/GeoRT/checkpoint/fk_model_allegro_left.pth
 !teleoperation/GeoRT/checkpoint/fk_model_allegro_right.pth
