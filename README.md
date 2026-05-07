@@ -9,11 +9,9 @@ conda env create -f environment-dexjoco.yml
 conda activate dexjoco
 ```
 
-The environment pins MuJoCo 3.4.0 and Gymnasium 1.0.0.
 
-## Optional Teleoperation Components
+## Teleoperation Components
 
-The default research environment is simulation-first and does not install
 SteamVR or OpenVR tooling. Optional teleoperation helpers live under
 [`teleoperation/`](teleoperation):
 
@@ -34,8 +32,7 @@ The simulator itself only depends on the UDP packets described in
 ```bash
 python scripts/record_demos_zarr.py \
   --exp_name water_plant \
-  --successes_needed 1 \
-  --show_sim_cameras False
+  --successes_needed 1 
 ```
 
 ## Demo Format
