@@ -1,0 +1,3 @@
+[submodule "teleoperation/GeoRT"]
+	path = teleoperation/GeoRT
+	url = https://github.com/facebookresearch/GeoRT.git
