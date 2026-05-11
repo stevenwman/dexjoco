@@ -7,51 +7,58 @@ For each successful episode, the script writes:
 - `videos/<camera_key>.mp4` for every RGB camera stream present in the observations
 """
 
-import sys
 import copy
 import datetime
 from pathlib import Path
 
-from absl import app, flags
-from tqdm import tqdm
-import numpy as np
 import cv2
+import numpy as np
 import zarr
-from scipy.spatial.transform import Rotation
+from absl import app, flags
 
-# local imports (assumed available in project)
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-TOOLS_DIR = Path(__file__).resolve().parent
-for path in (PROJECT_ROOT, TOOLS_DIR):
-    path_str = str(path)
-    if path_str not in sys.path:
-        sys.path.insert(0, path_str)
-
-from tasks.mappings import CONFIG_MAPPING, get_task_display_name, resolve_task_name
 # Project-specific utilities for replay storage and video writing.
-from dexjoco_data.episode_store import ZarrEpisodeStore
-from dexjoco_data.video_writer import Mp4VideoWriter
+from dexjoco.data.episode_store import ZarrEpisodeStore
+from dexjoco.data.video_writer import Mp4VideoWriter
+from dexjoco.tasks.mappings import CONFIG_MAPPING
+from scipy.spatial.transform import Rotation
+from tqdm import tqdm
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string(
     "exp_name",
     "water_plant",
-    "Task name. Supports internal ids such as water_plant and display names such as 'Water Plant'.",
+    "Task name, such as water_plant.",
 )
 flags.DEFINE_integer("successes_needed", 2, "Number of successful demos to collect.")
 flags.DEFINE_bool("show_sim_cameras", True, "Show simulation cameras")
-flags.DEFINE_bool("fake_env", False, "Skip teleoperation wrappers when the selected task supports fake_env")
-flags.DEFINE_integer("max_steps", 0, "Stop after this many environment steps; 0 means run until successes_needed")
+flags.DEFINE_bool(
+    "fake_env",
+    False,
+    "Skip teleoperation wrappers when the selected task supports fake_env",
+)
+flags.DEFINE_integer(
+    "max_steps",
+    0,
+    "Stop after this many environment steps; 0 means run until successes_needed",
+)
 flags.DEFINE_string("out_dir", "./", "Output base directory for zarr and videos")
 flags.DEFINE_integer("video_fps", 30, "FPS for saved MP4 videos")
-flags.DEFINE_float("data_fps", 30, "Sampling frequency of recorded low-dim data in Hz (used to write timestamps)")
+flags.DEFINE_float(
+    "data_fps",
+    30,
+    "Sampling frequency of recorded low-dim data in Hz (used to write timestamps)",
+)
 flags.DEFINE_enum(
     "render_mode",
     "human",
     ["human", "rgb_array"],
     "MuJoCo render mode for the task environment",
 )
-flags.DEFINE_bool("randomize", False, "Enable environment randomization when the selected task supports it")
+flags.DEFINE_bool(
+    "randomize",
+    False,
+    "Enable environment randomization when the selected task supports it",
+)
 
 
 def _ensure_base_outdir(base: str) -> Path:
@@ -181,7 +188,9 @@ class WristCameraViewer:
             if self.display_scale != 1.0:
                 new_width = max(1, int(frame.shape[1] * self.display_scale))
                 new_height = max(1, int(frame.shape[0] * self.display_scale))
-                frame = cv2.resize(frame, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
+                frame = cv2.resize(
+                    frame, (new_width, new_height), interpolation=cv2.INTER_LINEAR
+                )
             window_name = self.active_windows[camera_key]
             cv2.imshow(window_name, frame)
             cv2.resizeWindow(window_name, frame.shape[1], frame.shape[0])
@@ -247,7 +256,9 @@ def convert_action_quat_to_rotvec(action: np.ndarray) -> np.ndarray:
 def _flatten_action_for_storage(action) -> np.ndarray:
     if isinstance(action, dict):
         if "right" not in action or "left" not in action:
-            raise ValueError(f"Dict action must contain right and left keys, got {sorted(action)}.")
+            raise ValueError(
+                f"Dict action must contain right and left keys, got {sorted(action)}."
+            )
         return np.concatenate(
             [
                 np.asarray(action["right"], dtype=np.float64).reshape(-1),
@@ -258,7 +269,9 @@ def _flatten_action_for_storage(action) -> np.ndarray:
     return np.asarray(action, dtype=np.float64).reshape(-1)
 
 
-def _write_demo_zarr_and_videos(trajectory, exp_name: str, success_index: int, base_out: Path, video_fps: int):
+def _write_demo_zarr_and_videos(
+    trajectory, exp_name: str, success_index: int, base_out: Path, video_fps: int
+):
     """Save a single demo trajectory to a zarr group and MP4 camera captures.
 
     Structure created:
@@ -405,12 +418,8 @@ def _has_displayable_wrist_images(obs) -> bool:
 
 
 def main(_argv):
-    try:
-        task_id = resolve_task_name(FLAGS.exp_name)
-    except KeyError:
-        raise ValueError(f"Unknown task name: {FLAGS.exp_name}")
+    task_id = FLAGS.exp_name
 
-    task_display_name = get_task_display_name(task_id)
     config = CONFIG_MAPPING[task_id]()
 
     env = config.get_environment(
@@ -420,7 +429,7 @@ def main(_argv):
     )
 
     obs, info = env.reset()
-    print(f"Environment reset complete for {task_display_name} ({task_id}).")
+    print(f"Environment reset complete for {task_id}.")
 
     base_out = _ensure_base_outdir(FLAGS.out_dir)
     saved_demo_dirs = []
@@ -442,7 +451,11 @@ def main(_argv):
     while success_count < success_needed:
         actions = np.zeros(env.action_space.sample().shape)
 
-        if FLAGS.show_sim_cameras and wrist_cam_viewer is None and _has_displayable_wrist_images(obs):
+        if (
+            FLAGS.show_sim_cameras
+            and wrist_cam_viewer is None
+            and _has_displayable_wrist_images(obs)
+        ):
             wrist_cam_viewer = WristCameraViewer()
 
         if wrist_cam_viewer is not None:
@@ -462,7 +475,9 @@ def main(_argv):
             actions = info["intervene_action"]
 
         actions = _flatten_action_for_storage(actions)
-        transition = copy.deepcopy(dict(observations=obs, actions=actions, dones=done, infos=info))
+        transition = copy.deepcopy(
+            dict(observations=obs, actions=actions, dones=done, infos=info)
+        )
         trajectory.append(transition)
 
         pbar.set_description(f"Return: {returns}")
@@ -478,7 +493,9 @@ def main(_argv):
         if done:
             if info.get("succeed", False):
                 success_count += 1
-                demo_dir = _write_demo_zarr_and_videos(trajectory, task_id, success_count, base_out, FLAGS.video_fps)
+                demo_dir = _write_demo_zarr_and_videos(
+                    trajectory, task_id, success_count, base_out, FLAGS.video_fps
+                )
                 saved_demo_dirs.append(demo_dir)
                 print(f"[Saved] success #{success_count} -> {demo_dir}")
                 pbar.update(1)
