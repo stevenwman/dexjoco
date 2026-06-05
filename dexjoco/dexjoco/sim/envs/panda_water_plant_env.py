@@ -136,7 +136,7 @@ class PandaWaterPlantGymEnv(MujocoGymEnv):
         self._site_id = self._model.site("attachment_site").id
 
         self._allegro_dof_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in _ALLEGRO_JOINT_NAMES],
+            [int(self._model.joint(n).qposadr.item()) for n in _ALLEGRO_JOINT_NAMES],
             dtype=int,
         )
 
@@ -507,7 +507,7 @@ class PandaWaterPlantGymEnv(MujocoGymEnv):
             mujoco.mj_step(self._model, self._data)  # type: ignore
 
         # cone alpha logic
-        watering_joint_0_pos = float(self._data.sensor("spray_joint_0_pos").data)
+        watering_joint_0_pos = float(self._data.sensor("spray_joint_0_pos").data.item())
 
         was_trigger_pulled = self._trigger_pulled
         if watering_joint_0_pos < _TRIGGER_RELEASE_THRESHOLD:

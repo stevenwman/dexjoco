@@ -159,16 +159,16 @@ class PandaBimanualHanoiGymEnv(MujocoGymEnv):
         self._allegro_ctrl_ids = np.asarray(allegro_ids, dtype=int)
 
         self._allegro_dof_right_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_right_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_right_names],
             dtype=int,
         )
         self._allegro_dof_left_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_left_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_left_names],
             dtype=int,
         )
 
-        self._mocap_right_id = int(self._model.body("target_right").mocapid)
-        self._mocap_left_id = int(self._model.body("target_left").mocapid)
+        self._mocap_right_id = int(self._model.body("target_right").mocapid.item())
+        self._mocap_left_id = int(self._model.body("target_left").mocapid.item())
 
         # Scene objects
         self._base_body_id = self._model.body("hanoi_base").id

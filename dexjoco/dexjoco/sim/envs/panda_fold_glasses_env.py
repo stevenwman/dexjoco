@@ -85,7 +85,7 @@ class PandaFoldGlassesGymEnv(MujocoGymEnv):
             "thj0", "thj1", "thj2", "thj3",
         ]
         self._allegro_dof_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_names],
             dtype=int
         )
         # print("INIT allegro_dof_ids:", self._allegro_dof_ids.shape)

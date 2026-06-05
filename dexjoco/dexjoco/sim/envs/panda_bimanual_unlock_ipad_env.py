@@ -139,13 +139,13 @@ class PandaBimanualUnlockIpadGymEnv(MujocoGymEnv):
 
         self._allegro_dof_right_ids = np.asarray(
             [
-                int(self._model.joint(n).qposadr)
+                int(self._model.joint(n).qposadr.item())
                 for n in self._allegro_joint_right_names
             ],
             dtype=int,
         )
         self._allegro_dof_left_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_left_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_left_names],
             dtype=int,
         )
 

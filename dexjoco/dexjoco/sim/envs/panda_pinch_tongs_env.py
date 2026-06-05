@@ -103,7 +103,7 @@ class PandaPinchTongsGymEnv(MujocoGymEnv):
             "thj3",
         ]
         self._allegro_dof_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_names],
             dtype=int,
         )
 
@@ -567,7 +567,7 @@ class PandaPinchTongsGymEnv(MujocoGymEnv):
 
     def _update_pinch_count(self) -> None:
         try:
-            joint_pos = float(self._data.sensor("tongs_joint_0_pos").data)
+            joint_pos = float(self._data.sensor("tongs_joint_0_pos").data.item())
         except Exception:
             return
 

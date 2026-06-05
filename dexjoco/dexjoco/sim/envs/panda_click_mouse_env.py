@@ -105,7 +105,7 @@ class PandaClickMouseGymEnv(MujocoGymEnv):
             "thj3",
         ]
         self._allegro_dof_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_names],
             dtype=int,
         )
 
@@ -516,7 +516,7 @@ class PandaClickMouseGymEnv(MujocoGymEnv):
 
         self._restore_display_color()
         try:
-            self._mouse_joint0_init = float(self._data.sensor("mouse_joint0_pos").data)
+            self._mouse_joint0_init = float(self._data.sensor("mouse_joint0_pos").data.item())
         except Exception:
             self._mouse_joint0_init = 0.0
 
@@ -615,7 +615,7 @@ class PandaClickMouseGymEnv(MujocoGymEnv):
 
     def _detect_click(self) -> bool:
         try:
-            joint0 = float(self._data.sensor("mouse_joint0_pos").data)
+            joint0 = float(self._data.sensor("mouse_joint0_pos").data.item())
         except Exception:
             return False
         return (joint0 - self._mouse_joint0_init) > _CLICK_THRESHOLD

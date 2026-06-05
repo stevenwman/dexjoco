@@ -123,11 +123,11 @@ class PandaBimanualMicrowaveCookGymEnv(MujocoGymEnv):
         self._allegro_ctrl_ids = np.asarray(allegro_ids, dtype=int)
 
         self._allegro_dof_right_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in allegro_joint_right_names],
+            [int(self._model.joint(n).qposadr.item()) for n in allegro_joint_right_names],
             dtype=int
         )
         self._allegro_dof_left_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in allegro_joint_left_names],
+            [int(self._model.joint(n).qposadr.item()) for n in allegro_joint_left_names],
             dtype=int
         )
 
@@ -591,7 +591,7 @@ class PandaBimanualMicrowaveCookGymEnv(MujocoGymEnv):
 
     def _compute_success(self):
         # ---- door must be closed ----
-        micro_qpos = float(self._data.joint("microjoint").qpos)
+        micro_qpos = float(self._data.joint("microjoint").qpos.item())
         microwave_closed = abs(micro_qpos) < 1e-2
 
         # ---- hot_dog must be inside interior bbox ----

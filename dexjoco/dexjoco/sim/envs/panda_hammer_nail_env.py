@@ -81,7 +81,7 @@ class PandaHammerNailGymEnv(MujocoGymEnv):
         self._panda_ctrl_ids = np.asarray(
             [self._model.actuator(f"actuator{i}").id for i in range(1, 8)]
         )
-        self._panda_mocap_id = int(self._model.body("target").mocapid)
+        self._panda_mocap_id = int(self._model.body("target").mocapid.item())
 
         # Allegro
         self._site_id = self._model.site("attachment_site").id
@@ -104,7 +104,7 @@ class PandaHammerNailGymEnv(MujocoGymEnv):
             "thj3",
         ]
         self._allegro_dof_ids = np.asarray(
-            [int(self._model.joint(n).qposadr) for n in self._allegro_joint_names],
+            [int(self._model.joint(n).qposadr.item()) for n in self._allegro_joint_names],
             dtype=int,
         )
 
@@ -142,7 +142,7 @@ class PandaHammerNailGymEnv(MujocoGymEnv):
 
         # Nail body (mocap) for insertion depth.
         nail_body_id = self._model.body("nail").id
-        self._nail_mocap_id = int(self._model.body("nail").mocapid)
+        self._nail_mocap_id = int(self._model.body("nail").mocapid.item())
         if self._nail_mocap_id < 0:
             raise RuntimeError("Nail body must be mocap-enabled (mocap='true') in XML.")
         self._nail_init_pos = self._model.body_pos[nail_body_id].copy()
